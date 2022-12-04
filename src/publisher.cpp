@@ -22,7 +22,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 
-using namespace literals::chrono_literals;
+using namespace std::chrono_literals;
 
 /* This example creates a subclass of Node and uses std::bind() to register a
  * member function as a callback from the timer. */
@@ -39,6 +39,7 @@ class MinimalPublisher : public rclcpp::Node {
   void timer_callback() {
     auto message = std_msgs::msg::String();
     message.data = "Hello, world! My name is Sanchit Tanwar. "
+                  +
                    std::to_string(count_++);
     RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
     publisher_->publish(message);
