@@ -1,6 +1,3 @@
-# beginner_tutorials
-Ros beginner tutorials for ENPM808X, UMD
-
 # ROS2 Publisher/Subscriber
 
 # Dependencies and Assumptions:
