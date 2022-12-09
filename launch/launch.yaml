@@ -1,0 +1,19 @@
+launch:
+
+- arg:
+    name: "pubfreq"
+    default: "1.0"
+
+- node:
+    pkg: "beginner_tutorials"
+    exec: "talker"
+    name: "publisher"
+    param:
+    -
+      name: "pubfreq"
+      value: "$(var pubfreq)"
+
+- node:
+    pkg: "beginner_tutorials"
+    exec: "listener"
+    name: "subscriber"
