@@ -65,7 +65,7 @@ cd ~/ros2_ws/src
 ## Clone this package
 
 ```bash
-git clone -b Week10_HW  https://github.com/sanchit2843/beginner_tutorials
+git clone -b Week11_HW  https://github.com/sanchit2843/beginner_tutorials
 ```
 
 ## Compile the package
