@@ -22,6 +22,9 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "beginner_tutorials/srv/custom_message.hpp"
+#include "geometry_msgs/msg/transform_stamped.hpp"
+#include "tf2/LinearMath/Quaternion.h"
+#include "tf2_ros/static_transform_broadcaster.h"
 
 using namespace std::chrono_literals;
 
@@ -92,9 +95,75 @@ class MinimalPublisher : public rclcpp::Node {
   size_t count_;
 };
 
+/**
+ * @brief To publish a static frame to /tf_static topic
+ * 
+ */
+class StaticFramePublisher : public rclcpp::Node {
+ public:
+    explicit StaticFramePublisher(char * transforms[])
+    : Node("publisher_node") {
+    tf_static_broadcaster_ =
+    std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
+
+    // Publish static transforms once at startup
+    this->create_transform(transforms);
+    }
+
+ private:
+    void create_transform(char * transforms[]) {
+    geometry_msgs::msg::TransformStamped t;
+
+    t.header.stamp = this->get_clock()->now();
+    t.header.frame_id = "talker";
+    t.child_frame_id = transforms[1];
+
+    t.transform.translation.x = atof(transforms[2]);
+    t.transform.translation.y = atof(transforms[3]);
+    t.transform.translation.z = atof(transforms[4]);
+    tf2::Quaternion q;
+    q.setRPY(
+      atof(transforms[5]),
+      atof(transforms[6]),
+      atof(transforms[7]));
+    t.transform.rotation.x = q.x();
+    t.transform.rotation.y = q.y();
+    t.transform.rotation.z = q.z();
+    t.transform.rotation.w = q.w();
+
+    tf_static_broadcaster_->sendTransform(t);
+    }
+
+    std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_static_broadcaster_;
+};
+
+
 int main(int argc, char * argv[]) {
-  rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<MinimalPublisher>());
-  rclcpp::shutdown();
-  return 0;
+if (argc ==1) {
+rclcpp::init(argc, argv);
+rclcpp::spin(std::make_shared<MinimalPublisher>());
+rclcpp::shutdown();
+return 0;
+} else {
+auto logger = rclcpp::get_logger("logger");
+
+if (argc != 8) {
+  RCLCPP_INFO(
+    logger, "Invalid number of parameters");
+  return 1;
+}
+
+if (strcmp(argv[1], "talker") == 0) {
+  RCLCPP_INFO(logger, "static turtle name cannot be 'talker'");
+  return 2;
+}
+
+
+rclcpp::init(argc, argv);
+RCLCPP_INFO(logger,
+                "Tf2 Static Brodcaster started");
+rclcpp::spin(std::make_shared<StaticFramePublisher>(argv));
+rclcpp::shutdown();
+return 3;
+}
 }

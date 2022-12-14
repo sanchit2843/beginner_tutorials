@@ -101,10 +101,53 @@ ros2 run beginner_tutorials listener
 ```bash
 ros2 launch beginner_tutorials launch.yaml pubfreq:=2.0 
 ```
-### Change publisher frequency to custom value
 
 # Invoke RQT console GUI
 
 ```bash
 ros2 run rqt_console rqt_console
+```
+
+# Publishing static tf2 frame:
+
+```bash
+ros2 run beginner_tutorials talker talk 1 0 2 0 3 0
+```
+
+# Launching ros2 publisher subscriber
+
+```bash
+ros2 launch beginner_tutorials rosbag_recorder.py 
+```
+The ros bag will be saved in the directory all_topis_bag in the ros workspace
+
+### To print the bag info
+
+```bash
+ros2 bag info all_topics_bag
+```
+
+# Running service call
+```bash
+ros2 service call /modify_message beginner_tutorials/srv/CustomMessage "{sanchit: 'This is my new message'}"
+```
+
+# Running tests:
+
+```bash
+colcon test --event-handlers console_direct+ --packages-select beginner_tutorials
+```
+# cpplint and cppcheck commands:
+
+```bash
+cpplint --filter=-build/c++11,+build/c++17,-build/namespaces,-build/include_order $( find . -name *.cpp | grep -vE -e "^./build/" -e "^./vendor/") $( find . -name *.hpp | grep -vE -e "^./build/" -e "^./vendor/") > results/cpplint_result.txt
+
+cppcheck --enable=all --std=c++17 --suppress=missingIncludeSystem $( find . -name *.cpp | grep -vE -e "^./build/" -e "^./vendor/") --output-file=results/cppcheck_process.txt > results/cppcheck_result.txt
+
+```
+
+## To install cpplint and cppcheck:
+
+```bash
+sudo apt install cpplint
 ```

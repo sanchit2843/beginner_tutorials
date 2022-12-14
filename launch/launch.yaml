@@ -2,7 +2,7 @@ launch:
 
 - arg:
     name: "pubfreq"
-    default: "1.0"
+    default: "8.0"
 
 - node:
     pkg: "beginner_tutorials"
@@ -11,6 +11,7 @@ launch:
     param:
     -
       name: "pubfreq"
+
       value: "$(var pubfreq)"
 
 - node:
